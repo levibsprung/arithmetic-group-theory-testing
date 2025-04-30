@@ -259,7 +259,7 @@ def main(cfg):
     ## Greedy decoding will overide any temperature arguments
 
     if cfg.max_size_given is not None: # allows unique splits for eval
-        max_size = max_size_given
+        max_size = cfg.max_size_given
 
     # Grid plots - grid search from 1x1 to 12x12 data
     data_sizes = list(range(1, max_size))

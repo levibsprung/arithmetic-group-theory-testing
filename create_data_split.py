@@ -44,7 +44,7 @@ def generate_dataset(dir_name, operation, n, m, num_examples, base_folder_name, 
     if p < 0 or p >= 1:
         raise ValueError("Probability p must be strictly between 0 and 1.")
 
-    random.seed()
+    random.seed(seed)
     dataset = []
 
     for _ in range(num_examples):
