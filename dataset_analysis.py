@@ -16,7 +16,7 @@ def read_dataset(dir_name, condense_white_space=False):
                 lines = file.readlines()
                 stripped_lines = [line.replace("\n", "") for line in lines]
                 if condense_white_space:
-                    stripped_lines = [re.sub('\s+',' ', line) for line in lines]
+                    stripped_lines = [re.sub(r'\s+',' ', line) for line in lines]
                 dataset.extend(stripped_lines)
 
     for i in range(0,min(len(dataset),5)):
@@ -154,9 +154,15 @@ def main(dir_name):
         print("repetitions: ",result_list)
         create_repetition_heatmap(result_list, dir_name=dir_name, remove_formatting=remove_formatting)
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Data analysis")
-    parser.add_argument("--dir_name", type=str, required=True)
-    FLAGS = parser.parse_args()
+# if __name__ == "__main__":
+#     parser = argparse.ArgumentParser(description="Data analysis")
+#     parser.add_argument("--dir_name", type=str, required=True)
+#     FLAGS = parser.parse_args()
+
+#     main(FLAGS.dir_name)
+        
+if __name__ == "__main__":#for passing --dir_name directly
+    class FLAGS:
+        dir_name = ""
 
     main(FLAGS.dir_name)
