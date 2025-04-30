@@ -43,13 +43,22 @@ def generate_dataset(dir_name, operation, n, m, num_examples, base_folder_name, 
     """
     if p < 0 or p >= 1:
         raise ValueError("Probability p must be strictly between 0 and 1.")
-
+    
+    precreated_nums = []
+    
+    if using_precreated:            
+        with open(precreated_data_path, 'r', encoding='utf-8') as file:
+            for line in file:
+                a, b = map(int, line.strip().split())
+                precreated_nums.append((a,b))
+            
+            
     random.seed(seed)
     dataset = []
 
-    for _ in range(num_examples):
+    for i in range(num_examples):
         if using_precreated:
-            pass
+            num1, num2 = precreated_nums[i]
         elif exact: # exactly length n,m 
             num1 = random.randint(10**(n-1), 10**n - 1)
             num2 = random.randint(10**(m-1), 10**m - 1)
@@ -528,7 +537,7 @@ def main():
     parser.add_argument('--keep_0_for_len_1', action='store_true', help='keep 0 as a possible digit for length 1 digits, i.e. Naturals including 0')
     
     parser.add_argument('--using_precreated_data', action='store_true', help='use pre-created data from a text file of space-separated rows')
-    parser.add_argument('--precreated_data_path', default="", help='path to txt file for loading pre-created data from')
+    parser.add_argument('--precreated_data_path', default="", help='path to txt file for loading pre-created data from. Note: number of rows must not be smaller than num_samples')
     
     # bucket method to sample all operands equally
     parser.add_argument('--bucket', action='store_true', help='all operand lengths sampled equally')
