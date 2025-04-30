@@ -159,7 +159,7 @@ dmypy.json
 *.txt
 *.pth
 
-cramming-data/
+# cramming-data/
 sanity.sh
 log/
 del.sh
