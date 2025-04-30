@@ -376,7 +376,12 @@ def main(cfg):
                             predicted_ids = torch.transpose(predicted_ids, 0, 1)
                         else:
                             predicted_ids = predicted_ids.reshape((1,-1)) # add a batch dim otherwise
-                            
+                    
+
+
+                    ''''
+                    Where comparison happens
+                    '''
                     # ignore everything after EOS on eval but replacing all after EOS with PAD
                     eval_tensor = predicted_ids.clone()
                     input_tensor_EOS = (eval_tensor == EOS_token).int()
@@ -384,8 +389,18 @@ def main(cfg):
                     mask = torch.arange(eval_tensor.size(1)).to(device) > indices_of_EOS[:, None]
                     eval_tensor[mask] = PAD_token
                     
-                    # compare eval tensor to correct outputs
-                    elementwise_equal = torch.eq(eval_tensor, tokenized_answers)
+                    num_rows = eval_tensor.shape[0]
+                    if num_rows % 2 != 0:
+                        eval_tensor = eval_tensor[:-1]
+                        tokenized_prompts = tokenized_prompts[:-1]
+                    
+                    eval_tensor1 = eval_tensor[0:num_rows:2]
+                    eval_tensor2 = eval_tensor[1:num_rows:2]
+                    elementwise_equal = torch.eq(eval_tensor1, eval_tensor2)
+
+
+                    # # compare eval tensor to correct outputs
+                    # elementwise_equal = torch.eq(eval_tensor, tokenized_answers)
                     rows_equal = torch.all(elementwise_equal, dim=1)
                     num_equal_rows = torch.sum(rows_equal).item()
                     correct_total += (num_equal_rows/tokenized_prompts.shape[0])
