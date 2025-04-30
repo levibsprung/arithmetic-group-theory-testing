@@ -1,3 +1,6 @@
+import torch
+import random
+
 """Implementation of abacus embeddings"""
 # Example of how to extract digit tokens to pass into constructor
 # digit_tokens = tokenizer.convert_tokens_to_ids(['0','1','2','3','4','5','6','7','8','9'])

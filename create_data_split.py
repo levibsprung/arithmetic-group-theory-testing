@@ -36,19 +36,30 @@ def has_carry(num1, num2):
     return False
 
 # Function to generate the arithmetic dataset
-def generate_dataset(dir_name, operation, n, m, num_examples, base_folder_name, keep_places, exact, prepend_zeros, reverse_answer, reverse_all, p=0, no_carry_addition=False, seed=42, interleave=False):
+def generate_dataset(dir_name, operation, n, m, num_examples, base_folder_name, keep_places, exact, prepend_zeros, reverse_answer, reverse_all, p=0, no_carry_addition=False, seed=42, interleave=False, using_precreated=False, precreated_data_path=""):
     """
     generate a dataset, NOT using the bucket method!
     p = probability for random padding to be inserted
     """
     if p < 0 or p >= 1:
         raise ValueError("Probability p must be strictly between 0 and 1.")
-
+    
+    precreated_nums = []
+    
+    if using_precreated:            
+        with open(precreated_data_path, 'r', encoding='utf-8') as file:
+            for line in file:
+                a, b = map(int, line.strip().split())
+                precreated_nums.append((a,b))
+            
+            
     random.seed(seed)
     dataset = []
 
-    for _ in range(num_examples):
-        if exact: # exactly length n,m 
+    for i in range(num_examples):
+        if using_precreated:
+            num1, num2 = precreated_nums[i]
+        elif exact: # exactly length n,m 
             num1 = random.randint(10**(n-1), 10**n - 1)
             num2 = random.randint(10**(m-1), 10**m - 1)
         elif no_carry_addition and operation == '+':
@@ -293,14 +304,14 @@ def token_histogram(dir_name, tokenizer_type="normal"):
 
     plt.savefig(f"{dir_name}/token_histogram", bbox_inches='tight')
 
-def main_dataset_gen(dir_name, op, n, m, num_samples, exact=False, keep_places=False, prepend_zeros=0, reverse_answer=False, reverse_all=False, p=0, no_carry_addition=False, seed=42, interleave=False):
+def main_dataset_gen(dir_name, op, n, m, num_samples, exact=False, keep_places=False, prepend_zeros=0, reverse_answer=False, reverse_all=False, p=0, no_carry_addition=False, seed=42, interleave=False, using_precreated=False, precreated_data_path=""):
     """Main method for non bucket datasets"""
     base_directory = "./cramming-data/data"
     os.makedirs(base_directory, exist_ok=True)
     base_directory = f"{base_directory}/arithmetic_data"
     os.makedirs(base_directory, exist_ok=True)
     
-    dataset, data_folder_name, _ = generate_dataset(dir_name, op, n, m, num_samples, base_directory, keep_places, exact, prepend_zeros, reverse_answer, reverse_all, p, no_carry_addition, seed=seed, interleave=interleave)
+    dataset, data_folder_name, _ = generate_dataset(dir_name, op, n, m, num_samples, base_directory, keep_places, exact, prepend_zeros, reverse_answer, reverse_all, p, no_carry_addition, seed=seed, interleave=interleave, using_precreated=using_precreated, precreated_data_path=precreated_data_path)
 
 def tokenize_main(dir_name, tokenizer_type, test_split_ratio=0.05):
     """Main tokenizer method"""
@@ -525,6 +536,9 @@ def main():
     parser.add_argument('--interleave', action='store_true', help="interleave digits of the operands")
     parser.add_argument('--keep_0_for_len_1', action='store_true', help='keep 0 as a possible digit for length 1 digits, i.e. Naturals including 0')
     
+    parser.add_argument('--using_precreated_data', action='store_true', help='use pre-created data from a text file of space-separated rows')
+    parser.add_argument('--precreated_data_path', default="", help='path to txt file for loading pre-created data from. Note: number of rows must not be smaller than num_samples')
+    
     # bucket method to sample all operands equally
     parser.add_argument('--bucket', action='store_true', help='all operand lengths sampled equally')
     parser.add_argument("--limit", default=1000000, type=int, help="number of samples if using the bucket method")
@@ -590,7 +604,7 @@ def main():
             print("token histogram made")
             data_analysis_main(FLAGS.dir_name) # more automated analysis
     else:
-        main_dataset_gen(FLAGS.dir_name, FLAGS.op, FLAGS.n, FLAGS.m, FLAGS.num_samples, FLAGS.exact, FLAGS.keep_places, FLAGS.prepend_zeros, FLAGS.reverse_answer, FLAGS.reverse_all, FLAGS.p, FLAGS.no_carry_addition, FLAGS.seed, interleave=FLAGS.interleave)
+        main_dataset_gen(FLAGS.dir_name, FLAGS.op, FLAGS.n, FLAGS.m, FLAGS.num_samples, FLAGS.exact, FLAGS.keep_places, FLAGS.prepend_zeros, FLAGS.reverse_answer, FLAGS.reverse_all, FLAGS.p, FLAGS.no_carry_addition, FLAGS.seed, interleave=FLAGS.interleave, using_precreated=FLAGS.using_precreated_data, precreated_data_path=FLAGS.precreated_data_path)
 
 if __name__ == "__main__":
     main()
