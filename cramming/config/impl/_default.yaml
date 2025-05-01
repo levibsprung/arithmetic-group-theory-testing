@@ -7,7 +7,7 @@
 # This can be an absolute path (which will be honored) or a relative path
 # The relative path will be executed relative to the cfg.base_dir
 # This behavior is controlled in the main_launcher
-path: data
+path: Users\levis\Projects\arithmetic-group-theory-testing\cramming-data\data
 
 # data implementation:
 local_staging_dir: # Optionally copy a preprocessed dataset into this folder before loading it for training

@@ -65,6 +65,7 @@ def get_model_engine_tokenizer_dataloaders(cfg, setup, train_eval: bool = True):
                          f"  Initializing model from scratch!")
 
     log.info(f"Loading Data")
+    print(cfg.data)
     datasets, tokenizer = cramming.load_pretraining_corpus(cfg.data, cfg.impl, cfg.data_dir)
 
     real_dataset_sample_length = len(datasets['train'][0]['input_ids']) # for arithmetic datasets

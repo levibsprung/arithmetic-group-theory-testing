@@ -106,7 +106,8 @@ def system_startup(cfg):
         torch.backends.cuda.matmul.allow_tf32 = True
         torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction = True  # Should be true anyway
 
-    multiprocess.set_start_method("forkserver")
+    # multiprocess.set_start_method("forkserver")
+    multiprocess.set_start_method("spawn")
     if cfg.impl.local_staging_dir is not None:
         tmp_path = os.path.join(cfg.impl.local_staging_dir, "tmp")
         os.makedirs(tmp_path, exist_ok=True)

@@ -58,6 +58,8 @@ def generate_dataset(dir_name, operation, n, m, num_examples, base_folder_name, 
 
     for i in range(num_examples):
         if using_precreated:
+            if i >= len(precreated_nums):
+                break
             num1, num2 = precreated_nums[i]
         elif exact: # exactly length n,m 
             num1 = random.randint(10**(n-1), 10**n - 1)
@@ -92,7 +94,7 @@ def generate_dataset(dir_name, operation, n, m, num_examples, base_folder_name, 
             num2_str = zeros + num2_str
             result = "0" + zeros + result
 
-        orgional_p = p
+        original_p = p
 
         if reverse_all: # reversals 
             result = result[::-1]
@@ -105,7 +107,7 @@ def generate_dataset(dir_name, operation, n, m, num_examples, base_folder_name, 
         dataset_entry = f"{num1_str}{operation}{num2_str}={result}"
         if interleave: # interleave the operands so the digits of the same significance are  next to eachother
             dataset_entry = ''.join([a + b for a, b in zip(num1_str, num2_str)]) + num1_str[len(num2_str):] + num2_str[len(num1_str):]+f"={result}"
-        p = orgional_p
+        p = original_p
         if p > 0: # adds random spaces, exponentially decaying
             dataset_entry = f"{num1_str}{operation}{num2_str}={result}"
             if interleave:

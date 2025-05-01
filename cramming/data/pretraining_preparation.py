@@ -56,6 +56,7 @@ def load_pretraining_corpus(cfg_data, cfg_impl, data_dir: str = None):
     if data_path is None:
         data_path = cfg_impl.path
     data_src = list(cfg_data.sources.values())[0]
+    print(data_src)
     provider = data_src["provider"]
     tokenizer_type = data_src["tokenizer_type"]
     if provider == "fake":

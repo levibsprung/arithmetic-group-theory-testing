@@ -2,6 +2,8 @@
 
 import torch
 import hydra
+import torch._dynamo
+
 
 import os
 import time
@@ -13,6 +15,7 @@ import cramming
 
 log = logging.getLogger(__name__)
 
+torch._dynamo.config.suppress_errors = True
 
 def main_training_process(cfg, setup):
     """This function controls the central training loop."""
