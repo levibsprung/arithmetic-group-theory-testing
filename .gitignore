@@ -4,7 +4,6 @@ tables/*/*.csv#
 tables/*.csv
 tables/*.csv#
 tables/*.ods
-*.png
 *.pdf
 
 # torchdynamo debug
@@ -156,7 +155,6 @@ dmypy.json
 .pyre/
 
 *.csv
-*.txt
 *.pth
 
 cramming-data/
