@@ -10,7 +10,7 @@ def generate_symmetric_pairs(max_digits: int, num_pairs: int, seed: int = 42, ty
     #     max_digits (int): Maximum number of digits for each number.
     #     num_pairs (int): Number of random pairs to generate.
     #     seed (int): Random seed for reproducibility.
-    #     type (int): Type of generation. 1 for only {max_digits}, 2 up to {max_digits}, 2 for 2 digits.
+    #     type (int): Type of generation. 1 up to {max_digits}, 2 for only {max_digits}.
     
     random.seed(seed)
     # if operator == "+":
