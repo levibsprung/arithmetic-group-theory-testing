@@ -16,7 +16,7 @@ def generate_symmetric_pairs(max_digits: int, num_pairs: int, seed: int = 42, ty
     # if operator == "+":
     max_val = 10 ** max_digits - 1
     min_val = 10 ** (max_digits - 1)
-    filename = os.path.join(os.getcwd(), "cramming-data", "data", f"dataset_{max_digits}_digit.txt")
+    filename = os.path.join(os.getcwd(), "cramming-data", "data", "arithmetic_data", f"dataset_{max_digits}_digit.txt")
 
     if type == 1:
         with open(filename, 'w') as f:
