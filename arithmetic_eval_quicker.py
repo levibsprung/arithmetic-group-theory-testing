@@ -18,6 +18,8 @@ import random
 
 log = logging.getLogger(__name__)
 
+torch._dynamo.config.suppress_errors = True
+
 def grid_plotter(data, type="accs", name='_large', extra_path=None):
     """plot a 2d accuracy grid"""
     data = np.array(data)*100
@@ -263,6 +265,7 @@ def main(cfg):
 
     # Grid plots - grid search from 1x1 to 12x12 data
     data_sizes = list(range(1, max_size))
+    data_sizes = [10]
     acc_grid = np.zeros((len(data_sizes),len(data_sizes)))
     start_ind_1 = 0
     start_ind_2 = 0
@@ -291,8 +294,8 @@ def main(cfg):
 
     if not cfg.extended_eval:
         # main 2d loop
-        for data_size_1 in data_sizes:
-            for data_size_2 in data_sizes:
+        for ix, data_size_1 in enumerate(data_sizes):
+            for jx, data_size_2 in enumerate(data_sizes):
                 if (data_size_1 < start_ind_1 or data_size_2 < start_ind_2) and not completed_one:
                     continue
                 else:
@@ -320,6 +323,10 @@ def main(cfg):
                         file_path = f"../../../../data/arithmetic_data/x_grid_eval_dataset_2_reverse_all_tokenized/x_n_{data_size_1}_m_{data_size_2}_examples_100_diff_lens_exact_seed_91/hf_tokenized_dataset"
                     if cfg.pos_arth or cfg.pos_arth_ood:
                         file_path = f"../../../../data/arithmetic_data/pos_or_one_vec_zeros_eval/or_one_vec_zeros_{data_size_1}_{data_size_2}/hf_tokenized_dataset"
+                        
+                        
+                    
+                    file_path = f"../../../../data/arithmetic_data/precreated_8_digit/hf_tokenized_dataset"
                     tokenized_dataset = datasets.load_from_disk(file_path)["test"]
                     data_loader = torch.utils.data.DataLoader(tokenized_dataset, batch_size=100, shuffle=False)
                     equals_tensor = data_size_1+data_size_2+6
@@ -396,7 +403,10 @@ def main(cfg):
                     
                     eval_tensor1 = eval_tensor[0:num_rows:2]
                     eval_tensor2 = eval_tensor[1:num_rows:2]
-                    elementwise_equal = torch.eq(eval_tensor1, eval_tensor2)
+                    
+                    # print([[int(i) for i in k] for k in eval_tensor])
+                    
+                    # elementwise_equal = torch.eq(eval_tensor1, eval_tensor2)
 
 
                     # # compare eval tensor to correct outputs
@@ -415,7 +425,7 @@ def main(cfg):
                     with open(f"outputs/+_n_{data_size_1}_m_{data_size_2}.json", 'w') as json_file:
                         json.dump(decoded_batch, json_file)
 
-                    acc_grid[(data_size_1-1),(data_size_2-1)] = correct_total
+                    acc_grid[(ix),(jx)] = correct_total
 
                     if tuple_method:
                         with open(f"../../accs_grid_quick{name}.json", "w") as file:

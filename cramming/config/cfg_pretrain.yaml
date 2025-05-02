@@ -25,7 +25,7 @@ seed: # Optional: Set initial seed
 name: default # A name for this run [will be used for the summary table and outputs folder]
 
 # Total and central computation budget in hours:
-budget: 8
+budget: 15
 overall_budget: ${budget}
 
 # debug implementation by running every loop just once:
